@@ -100,15 +100,16 @@ class AvaTaxClientBase
      * @param string $apiUrl           The relative path of the API on the server
      * @param string $verb             The HTTP verb being used in this request
      * @param string $guzzleParams     The Guzzle parameters for this request, including query string and body parameters
+     *
+     * @return mixed
      */
     protected function restCall($apiUrl, $verb, $guzzleParams)
     {
         // Set authentication on the parameters
-        if (!isset($guzzleParams['auth'])){
+        if (!isset($guzzleParams['auth'])) {
             $guzzleParams['auth'] = $this->auth;
         }
         $guzzleParams['headers'] = [
-            'exceptions' => false,
             'Accept' => 'application/json',
             'X-Avalara-Client' => "{$this->appName}; {$this->appVersion}; PhpRestClient; 17.5.0-67; {$this->machineName}"
         ];
@@ -117,11 +118,11 @@ class AvaTaxClientBase
         try {
             $response = $this->client->request($verb, $apiUrl, $guzzleParams);
             $body = $response->getBody();
-            return json_decode($body);
-
         } catch (\Exception $e) {
-            return $e->getMessage();
+            $body = $e->getResponse()->getBody();
         }
+
+        return json_decode($body);
     }
 }
 ?>
