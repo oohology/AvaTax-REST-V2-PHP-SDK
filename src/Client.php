@@ -108,6 +108,7 @@ class AvaTaxClientBase
             $guzzleParams['auth'] = $this->auth;
         }
         $guzzleParams['headers'] = [
+            'exceptions' => false,
             'Accept' => 'application/json',
             'X-Avalara-Client' => "{$this->appName}; {$this->appVersion}; PhpRestClient; 17.5.0-67; {$this->machineName}"
         ];
